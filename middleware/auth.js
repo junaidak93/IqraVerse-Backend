@@ -3,9 +3,6 @@ import '../config/config.js';
 import logger from "../helper/logger.js";
 
 export default async (req, res, next) => {
-    next();
-    return;
-    
     try {
         if (!req.body) {
             req.body = {};

@@ -7,7 +7,7 @@ const login = async (req, res) => {
         return res.reply(200, "Login successful", tokenData);
     } catch (err) {
         logger.error(JSON.stringify(err));
-        return res.reply(500, "Login failed");
+        return res.reply(500, "Login failed", err);
     }
 }
 
@@ -38,7 +38,7 @@ const callback = async (req, res) => {
 
     } catch (err) {
         logger.error(JSON.stringify(err));
-        return res.reply(500, "OAuth failed");
+        return res.reply(500, "OAuth failed", err);
     }
 }
 

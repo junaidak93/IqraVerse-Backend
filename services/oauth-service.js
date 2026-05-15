@@ -1,6 +1,7 @@
+import './../config/config.js';
 import { PostAsync } from "./../helper/fetcher/fetcher.js"
 
-const env = process.env
+const env = process.env;
 
 const URL = env.QURAN_API_OAUTH_URL;
 
@@ -9,7 +10,9 @@ const KEY_CLIENT_ID = env.KEY_CLIENT_ID || ""
 const KEY_GRANT_TYPE = env.KEY_GRANT_TYPE || ""
 const KEY_SCOPE = env.KEY_SCOPE || ""
 const KEY_CODE = env.KEY_CODE || ""
+const KEY_RESPONSE_TYPE = env.KEY_RESPONSE_TYPE || ""
 
+const RESPONSE_TYPE = env.VALUE_RESPONSE_TYPE
 const CLIENT_ID = env.QURAN_API_CLIENT_ID
 const GRANT_TYPE = env.VALUE_GRANT_TYPE
 const SCOPE = env.VALUE_SCOPE
@@ -35,12 +38,21 @@ const BODY = {
 }
 
 export async function getAccessToken(code) {
+  let body = { ...BODY };
+  
+  if (code) {
+    body[KEY_CODE] = code;
+  } else {
+    delete body[KEY_REDIRECT_URI];
+  }
+
   return await PostAsync(
     URL, 
     HEADERS, 
-    { 
-        ...BODY, 
-        [KEY_CODE]: code 
-    }
+    body
   )
+}
+
+export function getOAuthUrl() {
+  return `${URL}?${KEY_CLIENT_ID}=${CLIENT_ID}&${KEY_REDIRECT_URI}=${REDIRECT_URI}&${KEY_RESPONSE_TYPE}=${RESPONSE_TYPE}&${KEY_SCOPE}=${SCOPE}`;
 }

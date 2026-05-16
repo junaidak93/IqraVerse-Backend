@@ -1,6 +1,7 @@
 import CryptoJS from "crypto-js";
 import '../config/config.js';
 import logger from "../helper/logger.js";
+import stringify from "json-stable-stringify";
 
 export default async (req, res, next) => {
     try {
@@ -8,13 +9,13 @@ export default async (req, res, next) => {
             req.body = {};
         }
 
-        const serverSalt = process.env.SALT;
         const serverAppId = process.env.APPLICATION_ID;
         const serverTimestamp = Date.now();
 
         const clientAppId = req.headers['x-application-id'];
         const clientTimestamp = Number(req.headers['x-timestamp']);
         const clientSignature = req.headers['x-signature'];
+        const clientNonce = req.headers['x-nonce'];
 
         if (!clientAppId || clientAppId !== serverAppId) {
             return res.reply(400, `${!clientAppId ? "Missing" : "Invalid"} application ID`);
@@ -32,8 +33,8 @@ export default async (req, res, next) => {
             return res.reply(400, "Request expired");
         }
 
-        const message = `${clientTimestamp}:${JSON.stringify(req.body)}`;
-        const serverSignature = CryptoJS.HmacSHA256(message, serverSalt).toString();
+        const message = `${clientTimestamp}:${clientNonce}:${stringify(req.body)}`;
+        const serverSignature = CryptoJS.HmacSHA256(message, clientNonce).toString();
 
         if (clientSignature !== serverSignature) {
             return res.reply(400, "Invalid signature");

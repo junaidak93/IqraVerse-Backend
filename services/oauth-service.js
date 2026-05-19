@@ -1,9 +1,11 @@
 import './../config/config.js';
 import { PostAsync } from "./../helper/fetcher/fetcher.js"
+import logger from "./../helper/logger.js";
 
 const env = process.env;
 
-const URL = env.QURAN_API_OAUTH_URL;
+const TOKEN_URL = env.QURAN_API_TOKEN_URL;
+const OAUTH_URL = env.QURAN_API_OAUTH_URL;
 
 const KEY_REDIRECT_URI = env.KEY_REDIRECT_URI || ""
 const KEY_CLIENT_ID = env.KEY_CLIENT_ID || ""
@@ -11,6 +13,7 @@ const KEY_GRANT_TYPE = env.KEY_GRANT_TYPE || ""
 const KEY_SCOPE = env.KEY_SCOPE || ""
 const KEY_CODE = env.KEY_CODE || ""
 const KEY_RESPONSE_TYPE = env.KEY_RESPONSE_TYPE || ""
+const KEY_STATE = env.KEY_STATE || ""
 
 const RESPONSE_TYPE = env.VALUE_RESPONSE_TYPE
 const CLIENT_ID = env.QURAN_API_CLIENT_ID
@@ -47,12 +50,14 @@ export async function getAccessToken(code) {
   }
 
   return await PostAsync(
-    URL, 
+    TOKEN_URL, 
     HEADERS, 
     body
   )
 }
 
 export function getOAuthUrl() {
-  return `${URL}?${KEY_CLIENT_ID}=${CLIENT_ID}&${KEY_REDIRECT_URI}=${REDIRECT_URI}&${KEY_RESPONSE_TYPE}=${RESPONSE_TYPE}&${KEY_SCOPE}=${SCOPE}`;
+  const state = Buffer.from(Date.now().toString()).toString('base64');
+
+  return `${OAUTH_URL}?${KEY_CLIENT_ID}=${CLIENT_ID}&${KEY_REDIRECT_URI}=${REDIRECT_URI}&${KEY_RESPONSE_TYPE}=${RESPONSE_TYPE}&${KEY_SCOPE}=${SCOPE}&${KEY_STATE}=${state}`;
 }

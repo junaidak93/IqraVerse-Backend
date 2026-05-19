@@ -16,7 +16,7 @@ var jsonParser = bodyParser.json();
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 router.use('/health', jsonParser, response, healthRoutes);
-router.use('/auth', jsonParser, response, authMiddleware, authRoutes);
+router.use('/auth', jsonParser, response, authRoutes);
 router.use('/resources', jsonParser, response, authMiddleware, resourceRoutes);
 
 export default router;

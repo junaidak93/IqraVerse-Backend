@@ -20,6 +20,7 @@ const callback = async (req, res) => {
     const { code } = req.query;
 
     if (!code) {
+        logger.log("callback response: ", JSON.stringify(req.query));
         return res.reply(400, "Missing auth code");
     }
 

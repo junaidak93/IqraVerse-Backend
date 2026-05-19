@@ -29,6 +29,8 @@ export default async (req, res, next) => {
             return res.reply(400, "Missing signature");
         }
 
+        //TODO: Handle Unique Nonce
+
         if (serverTimestamp - clientTimestamp > 30000) { // 30 seconds
             return res.reply(400, "Request expired");
         }

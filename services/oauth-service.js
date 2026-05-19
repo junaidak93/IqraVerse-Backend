@@ -14,10 +14,12 @@ const KEY_SCOPE = env.KEY_SCOPE || ""
 const KEY_CODE = env.KEY_CODE || ""
 const KEY_RESPONSE_TYPE = env.KEY_RESPONSE_TYPE || ""
 const KEY_STATE = env.KEY_STATE || ""
+const KEY_REFRESH_TOKEN = env.KEY_REFRESH_TOKEN || ""
 
 const RESPONSE_TYPE = env.VALUE_RESPONSE_TYPE
 const CLIENT_ID = env.QURAN_API_CLIENT_ID
 const GRANT_TYPE = env.VALUE_GRANT_TYPE
+const GRANT_TYPE_AUTH_CODE = env.VALUE_GRANT_TYPE_AUTH_CODE
 const SCOPE = env.VALUE_SCOPE
 const REDIRECT_URI = env.VALUE_REDIRECT_URI
 
@@ -45,6 +47,7 @@ export async function getAccessToken(code) {
   
   if (code) {
     body[KEY_CODE] = code;
+    body[KEY_GRANT_TYPE] = GRANT_TYPE_AUTH_CODE;
   } else {
     delete body[KEY_REDIRECT_URI];
   }
@@ -54,6 +57,18 @@ export async function getAccessToken(code) {
     HEADERS, 
     body
   )
+}
+
+export async function getRefreshToken(refreshToken) {
+  let body = { ...BODY };
+  body[KEY_REFRESH_TOKEN] = refreshToken;
+  body[KEY_GRANT_TYPE] = KEY_REFRESH_TOKEN;
+
+  return await PostAsync(
+    TOKEN_URL, 
+    HEADERS, 
+    body
+  );
 }
 
 export function getOAuthUrl() {

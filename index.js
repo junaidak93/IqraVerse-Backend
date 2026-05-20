@@ -18,6 +18,7 @@ const app = express();
 
 app.use(cors());
 
+app.set('trust proxy', 1);
 app.use(limiter);
 
 const PORT = process.env.PORT || 3000;

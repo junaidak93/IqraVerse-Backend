@@ -25,6 +25,10 @@ const oauth = (req, res) => {
     res.redirect(getOAuthUrl());
 }
 
+const logout = (req, res) => {
+    res.redirect(getOAuthUrl());
+}
+
 const callback = async (req, res) => {
     try {
         const { code } = req.query;
@@ -40,10 +44,7 @@ const callback = async (req, res) => {
             return res.reply(500, "Failed to obtain access token");
         }
 
-        const mobileRedirect =
-            `${process.env.DEEP_LINK}
-            ?${process.env.KEY_ACCESS_TOKEN}=${tokenData.access_token}
-            &${process.env.KEY_REFRESH_TOKEN}=${tokenData.refresh_token}`;
+        const mobileRedirect = `${process.env.DEEP_LINK}?${process.env.KEY_ACCESS_TOKEN}=${tokenData.access_token}&${process.env.KEY_REFRESH_TOKEN}=${tokenData.refresh_token}`;
 
         logger.log(mobileRedirect);
 

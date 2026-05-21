@@ -25,10 +25,6 @@ const oauth = (req, res) => {
     res.redirect(getOAuthUrl());
 }
 
-const logout = (req, res) => {
-    res.redirect(getOAuthUrl());
-}
-
 const callback = async (req, res) => {
     try {
         const { code } = req.query;
